@@ -2,12 +2,21 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
+import ca.uhn.fhir.jpa.dao.IFhirResourceDaoPatient;
+import ca.uhn.fhir.jpa.rp.r4.DocumentReferenceResourceProvider;
+import ca.uhn.fhir.jpa.rp.r4.PatientResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
+
+import org.hl7.fhir.r4.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+
+import br.com.mbamobi.fhir.resourceprovider.RNDSDocumentReferenceResourceProvider;
+import br.com.mbamobi.fhir.resourceprovider.RNDSPatientResourceProvider;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -15,7 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
-    @Autowired
+	@Autowired
     private DataSource myDataSource;
 
     /**
@@ -53,5 +62,21 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
         retVal.setEntityManagerFactory(entityManagerFactory);
         return retVal;
     }
+
+	@Override
+	public DocumentReferenceResourceProvider rpDocumentReferenceR4() {
+		RNDSDocumentReferenceResourceProvider prov = new RNDSDocumentReferenceResourceProvider();
+		prov.setContext(fhirContextR4());
+		prov.setDao(daoDocumentReferenceR4());
+		return prov;
+	}
+
+	/*@Override
+	public PatientResourceProvider rpPatientR4() {
+		RNDSPatientResourceProvider prov = new RNDSPatientResourceProvider();
+		//prov.setContext(fhirContextR4());
+		//prov.setDao(daoPatientR4());
+		return prov;
+	}*/
 
 }

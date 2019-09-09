@@ -9,8 +9,6 @@ public class ApplicationContext extends AnnotationConfigWebApplicationContext {
         FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
         if (fhirVersion == FhirVersionEnum.R4) {
             register(FhirServerConfigR4.class, FhirServerConfigCommon.class);
-        } else if (fhirVersion == FhirVersionEnum.R5) {
-            register(FhirServerConfigR5.class, FhirServerConfigCommon.class);
         } else {
             throw new IllegalStateException();
         }
